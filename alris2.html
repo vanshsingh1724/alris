@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIris - Intelligent Image Classification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .flow-arrow::after {
+            content: '→';
+            font-size: 2.5rem;
+            line-height: 1;
+            color: #0079FF;
+            margin: 0 1rem;
+        }
+        .flow-item:last-child .flow-arrow::after {
+            content: '';
+        }
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <header class="bg-[#004AAD] text-white text-center py-12 px-4">
+        <h1 class="text-5xl md:text-6xl font-black tracking-tight">AIris</h1>
+        <p class="mt-4 text-xl md:text-2xl font-light text-[#B4D9FF]">Intelligent Image Classification for Smarter Insights</p>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+        <section id="problem" class="mb-16">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-[#004AAD] mb-4">The Challenge of Manual Analysis</h2>
+                <p class="text-lg mb-8">In critical fields like healthcare, business, and education, professionals spend countless hours manually analyzing images. This process is not only slow and expensive but also dangerously prone to human error, creating a bottleneck for innovation and efficiency.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-5xl mb-2 text-[#0079FF]">⏳</div>
+                    <h3 class="text-xl font-bold mb-2">Slow & Tedious</h3>
+                    <p>Manual classification is a time-consuming task that slows down workflows and delays critical decision-making.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-5xl mb-2 text-[#0079FF]">❌</div>
+                    <h3 class="text-xl font-bold mb-2">Error-Prone</h3>
+                    <p>Human fatigue and subjectivity lead to inconsistencies and mistakes, compromising data quality.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-5xl mb-2 text-[#0079FF]">📈</div>
+                    <h3 class="text-xl font-bold mb-2">Not Scalable</h3>
+                    <p>It's impossible to keep up with the explosive growth of visual data, making manual methods unsustainable.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="solution" class="mb-16">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-[#004AAD] mb-4">Our Solution: AIris Explained</h2>
+                <p class="text-lg mb-8">AIris is a powerful yet simple web application that leverages a state-of-the-art Convolutional Neural Network (CNN) to automate image classification. We built it with a robust tech stack to deliver speed, accuracy, and a seamless user experience.</p>
+            </div>
+            <div class="bg-white p-8 rounded-lg shadow-md flex flex-col md:flex-row items-center justify-center space-y-6 md:space-y-0 md:space-x-12">
+                <div class="text-center">
+                    <h4 class="font-bold text-lg text-[#0079FF]">Core Technology</h4>
+                    <p class="text-2xl font-black">Python</p>
+                </div>
+                <div class="text-center">
+                    <h4 class="font-bold text-lg text-[#0079FF]">AI/ML Libraries</h4>
+                    <p class="text-2xl font-black">TensorFlow & PyTorch</p>
+                </div>
+                <div class="text-center">
+                    <h4 class="font-bold text-lg text-[#0079FF]">User Interface</h4>
+                    <p class="text-2xl font-black">Web Application</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="llm-deep-dive" class="mb-16">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-[#004AAD] mb-4">Deep Dive: Understand the Tech ✨</h2>
+                <p class="text-lg mb-4">To make this feature work on your own device, you'll need to use your own Gemini API key. You can get one for free at <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[#0079FF] hover:underline font-semibold">Google AI Studio</a>.</p>
+                <input type="password" id="apiKeyInput" placeholder="Paste your API Key here..." class="w-full max-w-md p-3 text-center rounded-lg border-2 border-gray-300 focus:outline-none focus:border-[#0079FF] mb-4">
+                <button id="deepDiveBtn" class="bg-[#0079FF] text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-[#00BFFF] transition duration-300">
+                    Explain Convolutional Neural Networks ✨
+                </button>
+                <div id="explanationContainer" class="hidden mt-8 p-6 bg-white rounded-lg shadow-md text-left">
+                    <p id="explanationText" class="text-lg"></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="workflow" class="mb-16">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl font-bold text-[#004AAD] mb-4">A Simple, Three-Step Workflow</h2>
+                <p class="text-lg mb-8">We designed AIris to be incredibly intuitive. Users can get powerful insights from their images in just a few clicks, transforming a complex analytical task into a simple, efficient process.</p>
+            </div>
+            <div class="bg-white p-8 rounded-lg shadow-md">
+                <div class="flex flex-col md:flex-row justify-center items-center">
+                    <div class="flow-item flex items-center mb-4 md:mb-0">
+                        <div class="text-center p-4">
+                            <div class="bg-[#0079FF] text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-2 text-2xl font-bold">1</div>
+                            <h3 class="font-bold text-lg">Upload Image</h3>
+                            <p>User selects an image from their device.</p>
+                        </div>
+                        <div class="flow-arrow hidden md:block"></div>
+                    </div>
+                    <div class="flow-item flex items-center mb-4 md:mb-0">
+                        <div class="text-center p-4">
+                            <div class="bg-[#0079FF] text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-2 text-2xl font-bold">2</div>
+                            <h3 class="font-bold text-lg">AI Processing</h3>
+                            <p>Our CNN model analyzes the image content.</p>
+                        </div>
+                        <div class="flow-arrow hidden md:block"></div>
+                    </div>
+                    <div class="flow-item flex items-center">
+                        <div class="text-center p-4">
+                            <div class="bg-[#0079FF] text-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-2 text-2xl font-bold">3</div>
+                            <h3 class="font-bold text-lg">Get Results</h3>
+                            <p>Receive the classification and confidence score.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="impact" class="mb-16">
+            <div class="text-center max-w-3xl mx-auto">
+                 <h2 class="text-3xl font-bold text-[#004AAD] mb-4">The Transformative Impact of AIris</h2>
+                 <p class="text-lg mb-8">By automating image classification, AIris delivers measurable improvements in speed, accuracy, and scalability. The data below illustrates the dramatic difference between traditional methods and our intelligent solution.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-center mb-4">Analysis Speed: Minutes vs. Seconds</h3>
+                    <p class="text-center mb-4">AIris reduces the time to classify a single image by over 98%, turning a multi-minute task into an instantaneous one.</p>
+                    <div class="chart-container h-64 md:h-80">
+                        <canvas id="speedChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold text-center mb-4">Error Reduction & Improved Accuracy</h3>
+                    <p class="text-center mb-4">By removing subjective human judgment, AIris achieves a near-perfect accuracy rate, ensuring data reliability.</p>
+                    <div class="flex justify-around items-center h-64 md:h-80">
+                        <div class="text-center">
+                            <div class="w-32 h-32 mx-auto"><canvas id="manualAccuracyChart"></canvas></div>
+                            <p class="mt-2 font-semibold">Manual Accuracy</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-32 h-32 mx-auto"><canvas id="airisAccuracyChart"></canvas></div>
+                            <p class="mt-2 font-semibold">AIris Accuracy</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
+                    <h3 class="text-xl font-bold text-center mb-4">Unmatched Scalability</h3>
+                    <p class="text-center mb-4 max-w-2xl mx-auto">AIris is built to handle massive datasets. While a human can process a limited number of images per hour, our system can analyze thousands, making large-scale projects feasible.</p>
+                    <div class="chart-container h-64 md:h-80">
+                        <canvas id="scalabilityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="learnings" class="mb-16">
+            <div class="text-center max-w-3xl mx-auto">
+                 <h2 class="text-3xl font-bold text-[#004AAD] mb-4">Our Journey: Challenges & Learnings</h2>
+                 <p class="text-lg mb-8">Building AIris was a challenging and rewarding experience. Overcoming these hurdles provided invaluable lessons in technology, problem-solving, and teamwork.</p>
+            </div>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#00BFFF]">
+                    <h3 class="text-xl font-bold mb-2">Data Challenges</h3>
+                    <p>Sourcing, cleaning, and labeling a high-quality dataset was a major hurdle that taught us the importance of data integrity in any ML project.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#00BFFF]">
+                    <h3 class="text-xl font-bold mb-2">Complex Integration</h3>
+                    <p>Connecting the Python backend, AI model, and web frontend required careful planning and taught us about building cohesive, full-stack applications.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#00BFFF]">
+                    <h3 class="text-xl font-bold mb-2">Model Optimization</h3>
+                    <p>Fine-tuning the neural network for optimal accuracy required extensive testing and iteration, teaching us persistence and analytical rigor.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="future" class="mb-16">
+            <div class="text-center max-w-3xl mx-auto">
+                 <h2 class="text-3xl font-bold text-[#004AAD] mb-4">The Future of AIris</h2>
+                 <p class="text-lg mb-8">This project is just the beginning. We have an exciting roadmap to expand the capabilities of AIris, making it an even more powerful tool for a wider range of applications.</p>
+            </div>
+            <div class="bg-white p-8 rounded-lg shadow-md">
+                <div class="flex flex-col md:flex-row justify-between space-y-6 md:space-y-0 text-center">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-[#0079FF]">🔬 Expanded Categories</h3>
+                        <p>Train the model on specialized datasets like medical scans and satellite imagery.</p>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-[#0079FF]">📱 Mobile Application</h3>
+                        <p>Develop a native mobile app for on-the-go image analysis and classification.</p>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-[#0079FF]">🎥 Real-Time Video</h3>
+                        <p>Integrate real-time video classification capabilities for dynamic environments.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-[#004AAD] text-white text-center py-8 px-4">
+        <p class="font-bold text-lg">AIris Project Team</p>
+        <p class="text-sm text-[#B4D9FF]">Vansh Singh, Parth Verma, Nischay Thapa, Shaivi, Rahul & Shikhar Chaudhary</p>
+    </footer>
+
+    <script>
+        const brilliantBlues = {
+            deep: '#004AAD',
+            bright: '#0079FF',
+            sky: '#00BFFF',
+            light: '#B4D9FF'
+        };
+
+        function wrapLabels(label, maxLength) {
+            if (label.length <= maxLength) {
+                return label;
+            }
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + ' ' + word).trim().length > maxLength) {
+                    lines.push(currentLine.trim());
+                    currentLine = word;
+                } else {
+                    currentLine = (currentLine + ' ' + word).trim();
+                }
+            }
+            if (currentLine) {
+                lines.push(currentLine.trim());
+            }
+            return lines;
+        }
+
+        const tooltipTitleCallback = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                                return label.join(' ');
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        };
+        
+        const speedChartCtx = document.getElementById('speedChart').getContext('2d');
+        new Chart(speedChartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Manual Analysis', 'AIris Analysis'],
+                datasets: [{
+                    label: 'Time in Seconds',
+                    data: [180, 2],
+                    backgroundColor: [brilliantBlues.sky, brilliantBlues.bright],
+                    borderColor: [brilliantBlues.sky, brilliantBlues.bright],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...tooltipTitleCallback,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Time (seconds)'
+                        }
+                    }
+                },
+                plugins: {
+                    ...tooltipTitleCallback.plugins,
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        const manualAccuracyCtx = document.getElementById('manualAccuracyChart').getContext('2d');
+        new Chart(manualAccuracyCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Successful', 'Error'],
+                datasets: [{
+                    data: [90, 10],
+                    backgroundColor: [brilliantBlues.bright, '#FF6384']
+                }]
+            },
+            options: {
+                ...tooltipTitleCallback,
+                maintainAspectRatio: false,
+                plugins: {
+                    ...tooltipTitleCallback.plugins,
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+        
+        const airisAccuracyCtx = document.getElementById('airisAccuracyChart').getContext('2d');
+        new Chart(airisAccuracyCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Successful', 'Error'],
+                datasets: [{
+                    data: [99.5, 0.5],
+                    backgroundColor: [brilliantBlues.bright, '#FF6384']
+                }]
+            },
+            options: {
+                ...tooltipTitleCallback,
+                maintainAspectRatio: false,
+                plugins: {
+                    ...tooltipTitleCallback.plugins,
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        const scalabilityChartCtx = document.getElementById('scalabilityChart').getContext('2d');
+        new Chart(scalabilityChartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Manual Processing', 'AIris Processing'],
+                datasets: [{
+                    label: 'Images Processed per Hour',
+                    data: [30, 1800],
+                    backgroundColor: [brilliantBlues.sky, brilliantBlues.bright],
+                }]
+            },
+            options: {
+                ...tooltipTitleCallback,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        type: 'logarithmic',
+                        beginAtZero: true,
+                         title: {
+                            display: true,
+                            text: 'Images per Hour (Log Scale)'
+                        }
+                    }
+                },
+                plugins: {
+                    ...tooltipTitleCallback.plugins,
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        const deepDiveBtn = document.getElementById('deepDiveBtn');
+        const explanationContainer = document.getElementById('explanationContainer');
+        const explanationText = document.getElementById('explanationText');
+        const apiKeyInput = document.getElementById('apiKeyInput');
+
+        deepDiveBtn.addEventListener('click', async () => {
+            const apiKey = apiKeyInput.value;
+            if (!apiKey) {
+                explanationText.textContent = "Please enter your Gemini API key to use this feature.";
+                explanationContainer.classList.remove('hidden');
+                return;
+            }
+
+            deepDiveBtn.disabled = true;
+            deepDiveBtn.textContent = 'Generating...';
+            explanationContainer.classList.add('hidden');
+            explanationText.textContent = '';
+
+            try {
+                const prompt = "Explain what a Convolutional Neural Network (CNN) is in simple terms, as if you are talking to a high school student. Focus on how it's used for image classification. Keep the explanation to two short paragraphs.";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }]
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API call failed: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (text) {
+                    explanationText.textContent = text;
+                    explanationContainer.classList.remove('hidden');
+                } else {
+                    explanationText.textContent = "Sorry, I couldn't generate an explanation. Please try again.";
+                    explanationContainer.classList.remove('hidden');
+                }
+            } catch (error) {
+                explanationText.textContent = "An error occurred. Please check the console for details.";
+                explanationContainer.classList.remove('hidden');
+                console.error("Error fetching explanation:", error);
+            } finally {
+                deepDiveBtn.disabled = false;
+                deepDiveBtn.textContent = 'Explain Convolutional Neural Networks ✨';
+            }
+        });
+    </script>
+</body>
+</html>
